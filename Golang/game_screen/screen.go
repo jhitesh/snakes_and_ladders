@@ -2,8 +2,8 @@ package game_screen
 
 import (
 	"fmt"
-	"snake_and_ladder/game_board"
-	"snake_and_ladder/players"
+	"snake_and_ladder/Golang/game_board"
+	"snake_and_ladder/Golang/players"
 )
 
 type GameScreen struct {
