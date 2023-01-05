@@ -6,6 +6,7 @@
 ## NOTE
 1. As soon as someone wins the game, the game is declared and closed
 2. Set players from `JSON/players.json` file
+3. Set Database configurations from `JSON/database.json` file
 
 # Database Schema
 ## Board Table
