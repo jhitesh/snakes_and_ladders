@@ -13,9 +13,10 @@ type Players struct {
 func GetPlayers() []string {
 	players_ := &Players{}
 
-	file, err := ioutil.ReadFile("./JSON/players.json")
+	file, err := ioutil.ReadFile("./Golang/JSON/players.json")
 	if err != nil {
 		log.Fatal("ERROR in reading file: ", err.Error())
+		return players_.Players
 	}
 
 	err = json.Unmarshal(file, players_)
