@@ -27,23 +27,27 @@ func NewSnake(start, end int) *Snake {
 	return &Snake{start, end}
 }
 
-func NewSnakeJumper(start, end int) Jumper {
-	return Jumper(NewSnake(start, end))
+type SnakeUtils struct {
 }
 
-type SnakeRandInt struct {
-}
+var snakeRandInt JumperUtils = &SnakeUtils{}
 
-var snakeRandInt JumperRandInt = &SnakeRandInt{}
-
-func (snakeRandInt *SnakeRandInt) RandIntStart(board *Board) int {
+func (snakeRandInt *SnakeUtils) RandIntStart(board *Board) int {
 	return 3 + rand.Intn(board.Size-3)
 }
 
-func (snakeRandInt *SnakeRandInt) RandIntEnd(_ *Board, start int) int {
+func (snakeRandInt *SnakeUtils) RandIntEnd(_ *Board, start int) int {
 	return 2 + rand.Intn(start-2)
 }
 
+func (snakeRandInt *SnakeUtils) WithinRange(start, end int, board *Board) bool {
+	return start > 2 && start < board.Size && end > 1 && end < start
+}
+
+func (snakeRandInt *SnakeUtils) NewJumper(start, end int) Jumper {
+	return Jumper(NewSnake(start, end))
+}
+
 func PutSnakes(board *Board) {
-	PutJumpers(board, snakeRandInt, NewSnakeJumper)
+	PutJumpers(board, snakeRandInt)
 }

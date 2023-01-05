@@ -5,22 +5,25 @@ type Jumper interface {
 	Print()
 }
 
-type JumperRandInt interface {
+type JumperUtils interface {
 	RandIntStart(*Board) int
 	RandIntEnd(*Board, int) int
+	WithinRange(int, int, *Board) bool
+	NewJumper(int, int) Jumper
 }
 
-func PutJumpers(board *Board, jumperRandInt JumperRandInt, newJumper func(int, int) Jumper) {
+func PutJumpers(board *Board, jumperUtils JumperUtils) {
 	numOfJumpers := board.Size / 12
 
-	count := 0
-	for count < numOfJumpers {
-		jumperPositionStart := jumperRandInt.RandIntStart(board)
-		if _, ok := board.Jumpers[jumperPositionStart]; !ok {
-			jumperPositionEnd := jumperRandInt.RandIntEnd(board, jumperPositionStart)
-			jumper := newJumper(jumperPositionStart, jumperPositionEnd)
-			board.Jumpers[jumperPositionStart] = jumper
-			count++
+	for count := 0; count < numOfJumpers; count++ {
+		jumperStart := jumperUtils.RandIntStart(board)
+		if _, ok := board.Jumpers[jumperStart]; !ok {
+			jumperEnd := jumperUtils.RandIntEnd(board, jumperStart)
+			if !jumperUtils.WithinRange(jumperStart, jumperEnd, board) {
+				continue
+			}
+			jumper := jumperUtils.NewJumper(jumperStart, jumperEnd)
+			board.Jumpers[jumperStart] = jumper
 		}
 	}
 }

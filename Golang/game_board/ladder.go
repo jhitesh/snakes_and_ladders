@@ -27,23 +27,27 @@ func NewLadder(start, end int) *Ladder {
 	return &Ladder{start, end}
 }
 
-func NewLadderJumper(start, end int) Jumper {
-	return Jumper(NewLadder(start, end))
+type LadderUtils struct {
 }
 
-type LadderRandInt struct {
-}
+var ladderRandInt JumperUtils = &LadderUtils{}
 
-var ladderRandInt JumperRandInt = &LadderRandInt{}
-
-func (ladderRandInt *LadderRandInt) RandIntStart(board *Board) int {
+func (ladderRandInt *LadderUtils) RandIntStart(board *Board) int {
 	return 2 + rand.Intn(board.Size-2)
 }
 
-func (ladderRandInt *LadderRandInt) RandIntEnd(board *Board, start int) int {
+func (ladderRandInt *LadderUtils) RandIntEnd(board *Board, start int) int {
 	return start + 1 + rand.Intn(board.Size-start-1)
 }
 
+func (ladderRandInt *LadderUtils) WithinRange(start, end int, board *Board) bool {
+	return start > 1 && start < board.Size-1 && end > start && end < board.Size
+}
+
+func (ladderRandInt *LadderUtils) NewJumper(start, end int) Jumper {
+	return Jumper(NewLadder(start, end))
+}
+
 func PutLadders(board *Board) {
-	PutJumpers(board, ladderRandInt, NewLadderJumper)
+	PutJumpers(board, ladderRandInt)
 }
