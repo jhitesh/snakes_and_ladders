@@ -1,8 +1,14 @@
 package game_board
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+	"log"
+	"snake_and_ladder/MySQL"
+)
 
 type Board struct {
+	ID      int
 	Size    int
 	Jumpers map[int]Jumper
 }
@@ -23,6 +29,47 @@ func (board *Board) Move(position, steps int) int {
 		return position
 	}
 	return newPosition
+}
+
+func (board *Board) Snakes() []*Snake {
+	snakes := make([]*Snake, 0)
+	index := 0
+	for _, jumper := range board.Jumpers {
+		if !jumper.JumpsUp() {
+			snakes = append(snakes, &Snake{})
+			snakes[index].Start, snakes[index].End = jumper.EndPoints()
+			index++
+		}
+	}
+	return snakes
+}
+
+func (board *Board) Ladders() []*Ladder {
+	ladders := make([]*Ladder, 0)
+	index := 0
+	for _, jumper := range board.Jumpers {
+		if jumper.JumpsUp() {
+			ladders = append(ladders, &Ladder{})
+			ladders[index].Start, ladders[index].End = jumper.EndPoints()
+			index++
+		}
+	}
+	return ladders
+}
+
+func (board *Board) SaveBoard() {
+	snakes := board.Snakes()
+	snakesJSON, err := json.Marshal(snakes)
+	if err != nil {
+		log.Fatal("ERROR in marshalling snakes: ", err.Error())
+	}
+
+	ladders := board.Ladders()
+	laddersJSON, err := json.Marshal(ladders)
+	if err != nil {
+		log.Fatal("ERROR in marshalling ladders: ", err.Error())
+	}
+	board.ID = MySQL.DB.SaveBoard(board.Size, len(board.Jumpers), snakesJSON, laddersJSON)
 }
 
 func NewBoard(size int) *Board {

@@ -20,6 +20,14 @@ func (ladder *Ladder) Jump() int {
 	return ladder.End
 }
 
+func (ladder *Ladder) JumpsUp() bool {
+	return true
+}
+
+func (ladder *Ladder) EndPoints() (int, int) {
+	return ladder.Start, ladder.End
+}
+
 func NewLadder(start, end int) *Ladder {
 	if end <= start {
 		return nil
@@ -30,24 +38,24 @@ func NewLadder(start, end int) *Ladder {
 type LadderUtils struct {
 }
 
-var ladderRandInt JumperUtils = &LadderUtils{}
+var globalLadderUtils JumperUtils = &LadderUtils{}
 
-func (ladderRandInt *LadderUtils) RandIntStart(board *Board) int {
-	return 2 + rand.Intn(board.Size-2)
+func (ladderUtils *LadderUtils) RandIntStart(board *Board) int {
+	return 2 + rand.Intn(board.Size-3)
 }
 
-func (ladderRandInt *LadderUtils) RandIntEnd(board *Board, start int) int {
+func (ladderUtils *LadderUtils) RandIntEnd(board *Board, start int) int {
 	return start + 1 + rand.Intn(board.Size-start-1)
 }
 
-func (ladderRandInt *LadderUtils) WithinRange(start, end int, board *Board) bool {
+func (ladderUtils *LadderUtils) WithinRange(start, end int, board *Board) bool {
 	return start > 1 && start < board.Size-1 && end > start && end < board.Size
 }
 
-func (ladderRandInt *LadderUtils) NewJumper(start, end int) Jumper {
+func (ladderUtils *LadderUtils) NewJumper(start, end int) Jumper {
 	return Jumper(NewLadder(start, end))
 }
 
 func PutLadders(board *Board) {
-	PutJumpers(board, ladderRandInt)
+	PutJumpers(board, globalLadderUtils)
 }

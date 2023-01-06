@@ -3,6 +3,8 @@ package game_board
 type Jumper interface {
 	Jump() int
 	Print()
+	JumpsUp() bool
+	EndPoints() (int, int)
 }
 
 type JumperUtils interface {

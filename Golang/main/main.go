@@ -28,10 +28,16 @@ func OrganizePlayers(players_ []string) []*players.Player {
 	gamePlayers := make([]*players.Player, len(players_))
 
 	for index, playerName := range players_ {
-		gamePlayers[index] = &players.Player{
+		player := &players.Player{
 			Name: playerName,
-			ID:   index + 1,
 		}
+
+		playerID, ok := MySQL.DB.CheckPlayer(player.Name)
+		if !ok {
+			playerID = MySQL.DB.SavePlayer(player.Name)
+		}
+		player.ID = playerID
+		gamePlayers[index] = player
 	}
 	return gamePlayers
 }
